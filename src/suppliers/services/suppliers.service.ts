@@ -25,7 +25,7 @@ export class SuppliersService {
     return this.supplierRepository.findOneBy({name});
   }
 
-  async save(supplier: CreateSupplierDto): Promise<SupplierEntity> {
+  async save(supplier: UpdateSupplierDto): Promise<SupplierEntity> {
     return this.supplierRepository.save(supplier);
   }
 

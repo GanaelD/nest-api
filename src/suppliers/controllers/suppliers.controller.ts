@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put} from '@nestjs/common';
 import { SuppliersService } from '../services/suppliers.service';
 import { CreateSupplierDto } from '../dto/create-supplier.dto';
 import { UpdateSupplierDto } from '../dto/update-supplier.dto';
+import {SupplierEntity} from "../entities/supplier.entity";
 
-@Controller('suppliers')
+@Controller('service/supplier')
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}
 
-  @Post()
-  create(@Body() createSupplierDto: CreateSupplierDto) {
-    return this.suppliersService.create(createSupplierDto);
-  }
-
   @Get()
-  findAll() {
-    return this.suppliersService.findAll();
+  async findAll(): Promise<SupplierEntity[]> {
+    return await this.suppliersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.suppliersService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: bigint): Promise<SupplierEntity> {
+    return await this.suppliersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupplierDto: UpdateSupplierDto) {
-    return this.suppliersService.update(+id, updateSupplierDto);
+  @Get('name/:name')
+  async findOneByName(@Param('name') name: string): Promise<SupplierEntity> {
+    return await this.suppliersService.findFirstByName(name);
+  }
+
+  @Post()
+  async createSupplier(@Body() createSupplierDto: CreateSupplierDto) {
+    return await this.suppliersService.save(createSupplierDto);
+  }
+
+  @Put(':id')
+  async update(@Param('id', ParseIntPipe) id: bigint, @Body() updateSupplierDto: UpdateSupplierDto) {
+    return await this.suppliersService.save(updateSupplierDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.suppliersService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: bigint) {
+    return await this.suppliersService.remove(id);
   }
 }
