@@ -1,0 +1,33 @@
+version: '3.1'
+services:
+  supplier-service:
+    depends_on:
+      - supplier-service-db
+    image: ganaeld/intes-supplier-service
+    restart: always
+    ports:
+      - 8095:3000
+    networks:
+      - intes
+    environment:
+      DB_HOST: supplier-service-db
+      DB_PORT: 5432
+      DB_USERNAME: SupplierService_USER
+      DB_PASSWORD: qsp!10jpuocqs6da2ze
+      DB_NAME: SupplierService
+      JWT_SECRET: sjfhlewoiropfkeori23904234ksdflewkjfwflewf4353
+  supplier-service-db:
+    image: postgres
+    restart: always
+    ports:
+      - 8096:5432
+    networks:
+      - intes
+    #volumes:
+    #  - 'supplier-service-db:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: SupplierService_USER
+      POSTGRES_PASSWORD: qsp!10kpuocqs6da2ze
+      POSTGRES_DB: SupplierService
+networks:
+  intes:
